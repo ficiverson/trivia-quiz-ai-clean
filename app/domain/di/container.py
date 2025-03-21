@@ -3,8 +3,10 @@ import logging
 from fastapi import HTTPException
 
 from app.domain.use_cases.generate_question_use_case import GenerateQuestionUseCase
-from app.infrastructure.repositories.azure_question_generator import AzureQuestionGenerator
-
+from app.infrastructure.repositories.langgraph_question_generator import LangGraphQuestionGenerator
+from app.infrastructure.datasource.azure_openai_llm import LlmProvider
+from app.infrastructure.tools.generation_tools import GenerationTool
+from app.infrastructure.tools.reflection_tools import ReflectionTool
 logger = logging.getLogger(__name__)
 
 class Container:
@@ -16,8 +18,12 @@ class Container:
             return
         
         try:
-            # Initialize repositories
-            self.question_generator = AzureQuestionGenerator()
+            # Initialize llm provider
+            self.llm_provider = LlmProvider()
+            # Initialize generation tool
+            self.generation_tool = GenerationTool(self.llm_provider)
+            self.reflection_tool = ReflectionTool(self.llm_provider)
+            self.question_generator = LangGraphQuestionGenerator(self.generation_tool, self.reflection_tool)
             logger.info("Successfully initialized repositories")
 
             # Initialize use cases

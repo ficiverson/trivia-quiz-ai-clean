@@ -20,11 +20,11 @@ async def generate_question(request: QuestionRequest):
         logger.info(f"Generating question for category: {request.category}")
         question = await container.generate_question_use_case.execute(request.category)
         logger.info("Successfully generated question")
-        
+        print(question)
         return QuestionResponse(
-            question=question.question,
-            correct_answer=question.correct_answer,
-            incorrect_answers=question.incorrect_answers
+            question=question["question"],
+            correct_answer=question["correctAnswer"],
+            incorrect_answers=question["incorrectAnswers"]
         )
     except Exception as e:
         logger.error(f"Error generating question: {str(e)}")
