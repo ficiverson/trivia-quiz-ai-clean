@@ -9,7 +9,7 @@ class GenerateQuestionUseCase:
 
     async def execute(self, category: str) -> Question:
         try:
-            # Generate initial question
+            
             logger.info(f"Generating initial question for category: {category}")
             result = self.langgraph_question_generator.generate_question(category)
             return result

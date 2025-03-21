@@ -5,6 +5,7 @@ from app.domain.entities.state import State
 from app.infrastructure.tools.generation_tools import GenerationTool
 from app.infrastructure.tools.reflection_tools import ReflectionTool
 import json
+import time
 class LangGraphQuestionGenerator():
     def __init__(self, generation_tool: GenerationTool, reflection_tool: ReflectionTool):
         try:
@@ -41,7 +42,8 @@ class LangGraphQuestionGenerator():
         """
         try:
             print("Generating question")
-            final_state =  self.graph.invoke({"messages":[category]})
+            timestamp = int(time.time())
+            final_state =  self.graph.invoke({"messages":[category]},{"configurable": {"thread_id": timestamp}})
             print("Question generated")
             content_dict = json.loads(final_state.get("content", "{}"))  # Convert JSON string to dictionary
             print(content_dict)
