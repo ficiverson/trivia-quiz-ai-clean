@@ -13,7 +13,7 @@ A FastAPI-based API that generates trivia questions using Azure OpenAI. Built wi
 
 ## Langgraph agents
 
-![Screenshot 2025-03-19 at 09 50 14](https://github.com/user-attachments/assets/ba7c0e04-4f33-4077-b28e-6f327fadd10a)
+![Screenshot 2025-03-21 at 13 44 05](https://github.com/user-attachments/assets/14c0a978-62bd-44f0-9ab6-5d05a739bb96)
 
 
 ## Project Structure
