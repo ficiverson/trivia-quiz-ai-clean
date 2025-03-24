@@ -78,6 +78,11 @@ The API will be available at `http://localhost:8000`
     - "corazón"
     - "videojuegos"
     - "tongurso"
+   
+## Frontend
+
+<img width="368" alt="Screenshot 2025-03-23 at 23 06 58" src="https://github.com/user-attachments/assets/0176bc86-8ec7-4087-a6fb-c00664c91471" />
+
 
 ## License
 
