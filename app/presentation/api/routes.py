@@ -1,14 +1,23 @@
 from fastapi import FastAPI, HTTPException
 import logging
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.presentation.entities.question import QuestionRequest, QuestionResponse
 from app.domain.di.container import Container
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Trivia Question Generator API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change "*" to specific origins for security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize container
 container = Container.get_instance()

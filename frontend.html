@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .loader {
+            display: none;
+            font-size: 18px;
+            color: #007bff;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Select Category</h2>
+        <select id="category">
+            <option value="science">Science</option>
+            <option value="history">History</option>
+            <option value="geography">Geography</option>
+            <option value="cinema and tv">Cinema and TV</option>
+            <option value="sports">Sports</option>
+            <option value="famous">Famous</option>
+            <option value="video games">Video Games</option>
+            <option value="tongurso">Tongurso</option>
+        </select>
+        <button id="getQuestionBtn" onclick="fetchQuestion()">Generate Question</button>
+        <div class="loader" id="loader">Loading...</div>
+        <h2 id="question">Waiting for question...</h2>
+        <div id="answers"></div>
+        <p id="feedback"></p>
+    </div>
+
+    <script>
+        async function fetchQuestion() {
+            const category = document.getElementById("category").value;
+            const questionElem = document.getElementById("question");
+            const answersDiv = document.getElementById("answers");
+            const feedbackElem = document.getElementById("feedback");
+            const loaderElem = document.getElementById("loader");
+            const buttonElem = document.getElementById("getQuestionBtn");
+
+            // Show loader, disable button, reset previous results
+            loaderElem.style.display = "block";
+            buttonElem.disabled = true;
+            questionElem.innerText = "";
+            answersDiv.innerHTML = "";
+            feedbackElem.innerText = "";
+
+            try {
+                let response = await fetch("http://127.0.0.1:8000/generate-question", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ category })
+                });
+                let data = await response.json();
+                console.log("Displaying question:", data);
+                displayQuestion(data);
+            } catch (error) {
+                questionElem.innerText = "Failed to load question.";
+            } finally {
+                // Hide loader, enable button
+                loaderElem.style.display = "none";
+                buttonElem.disabled = false;
+            }
+        }
+
+        function displayQuestion(data) {
+            let feedback = document.getElementById("feedback");
+            feedback.innerText = ""; // Clear any previous feedback
+            document.getElementById("question").innerText = data.question;
+            let answers = [...data.incorrect_answers, data.correct_answer].sort(() => Math.random() - 0.5);
+            let answersDiv = document.getElementById("answers");
+            answersDiv.innerHTML = "";
+            
+            answers.forEach(answer => {
+                let btn = document.createElement("button");
+                btn.innerText = answer;
+                btn.onclick = () => checkAnswer(answer, data.correct_answer);
+                answersDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            let feedback = document.getElementById("feedback");
+            if (selected === correct) {
+                feedback.innerText = "✅ Correct!";
+                feedback.style.color = "green";
+            } else {
+                feedback.innerText = "❌ Incorrect. Try again!";
+                feedback.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
